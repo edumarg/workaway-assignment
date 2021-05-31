@@ -20,6 +20,7 @@ class App extends Component {
   };
 
   handleLogin = user => {
+    console.log("handle login");
     if (user) this.setState({ user });
     hist.replace("/welcome");
   };
@@ -53,14 +54,8 @@ class App extends Component {
               />
             )}
           />
-          <ProtectedRoute
-            path="/admin"
-            render={props => <Admin user={this.state.user} {...props} />}
-          />
-          <ProtectedRoute
-            path="/rtl"
-            render={props => <RTL user={this.state.user} {...props} />}
-          />
+          <ProtectedRoute path="/admin" component={Admin} user={user} />
+          <ProtectedRoute path="/rtl" component={RTL} user={user} />
           <Redirect from="/" exact to="/welcome" />
           <Route path="/not-found" component={NotFound} />
           <Redirect to="/not-found" />
