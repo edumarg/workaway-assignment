@@ -3,6 +3,7 @@ export const users = [
   {
     userName: "edumarg",
     email: "edumarg@email.com",
+    password: "Abc123",
     firstName: "Edu",
     lastName: "Marg",
     city: "Tlv",
@@ -12,6 +13,7 @@ export const users = [
   {
     userName: "harry",
     email: "harry@email.com",
+    password: "Def456",
     firstName: "harry",
     lastName: "P",
     city: "London",
@@ -21,6 +23,7 @@ export const users = [
   {
     userName: "mickey",
     email: "mickey@email.com",
+    password: "Xyz789",
     firstName: "mickey",
     lastName: "M",
     city: "Orlandp",
@@ -41,6 +44,7 @@ export const registerUser = newUser => {
     }
   }
   users.push(newUser);
+  return newUser;
 };
 
 export const getUser = myUser => {

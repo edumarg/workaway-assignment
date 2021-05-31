@@ -9,12 +9,27 @@ import Welcome from "layouts/welcomePage";
 import Login from "views/Login/Login.js";
 import Register from "./views/Register/Register.js";
 
+import { getUser, registerUser } from "users";
+
 const hist = createBrowserHistory();
 
 class App extends Component {
   state = {
     user: ""
   };
+
+  handleLogin = user => {
+    const myUser = getUser(user);
+    if (myUser) this.setState({ user: myUser });
+    console.log("user not found");
+  };
+
+  handelRegister = user => {
+    const newUser = registerUser(user);
+    if (newUser) this.setState({ user: newUser });
+    console.log("Could not register user");
+  };
+
   render() {
     const { user } = this.state;
     return (
