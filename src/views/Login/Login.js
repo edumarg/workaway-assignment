@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { Component } from "react";
 
 import GridItem from "components/Grid/GridItem.js";
@@ -5,7 +6,29 @@ import GridContainer from "components/Grid/GridContainer.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 
+import { getUser } from "users";
+
 class Login extends Component {
+  state = { user: { userName: "", password: "" } };
+
+  handleLogin = () => {
+    console.log("loged in called");
+    const userToLog = { ...this.state.user };
+    if (userToLog.userName && userToLog.password) {
+      const myUser = getUser(userToLog);
+      if (myUser) {
+        console.log("user logedin", this.state.user);
+        this.props.onLogin(myUser);
+      } else console.log("user not found!!!");
+    }
+  };
+
+  handleOnChange = event => {
+    const myUser = { ...this.state.user };
+    myUser[event.target.name] = event.target.value;
+    this.setState({ user: myUser });
+  };
+
   render() {
     const myStyle = {
       textAlign: "center",
@@ -22,6 +45,10 @@ class Login extends Component {
               <CustomInput
                 labelText="Username"
                 id="username"
+                inputProps={{
+                  name: "userName",
+                  onChange: event => this.handleOnChange(event)
+                }}
                 formControlProps={{
                   fullWidth: true
                 }}
@@ -31,7 +58,11 @@ class Login extends Component {
               <CustomInput
                 labelText="Password"
                 id="password"
-                inputProps={{ type: "password" }}
+                inputProps={{
+                  name: "password",
+                  type: "password",
+                  onChange: event => this.handleOnChange(event)
+                }}
                 formControlProps={{
                   fullWidth: true
                 }}
@@ -40,7 +71,9 @@ class Login extends Component {
           </GridContainer>
           <GridContainer>
             <GridItem xs={12} sm={12} md={12}>
-              <Button color="primary">Login</Button>
+              <Button color="primary" onClick={() => this.handleLogin()}>
+                Login
+              </Button>
             </GridItem>
           </GridContainer>
         </div>

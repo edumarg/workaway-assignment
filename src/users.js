@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-export const users = [
+const users = [
   {
     userName: "edumarg",
     email: "edumarg@email.com",
@@ -33,12 +33,12 @@ export const users = [
 ];
 
 export const registerUser = newUser => {
-  for (user of users) {
-    if (newUser.userName === user.userName) {
+  for (let i = 0; i < users.length; i++) {
+    if (newUser.userName === users[i].userName) {
       console.log("user name already exists");
       return;
     }
-    if (newUser.email === user.email) {
+    if (newUser.email === users[i].email) {
       console.log("email already register");
       return;
     }
@@ -48,8 +48,11 @@ export const registerUser = newUser => {
 };
 
 export const getUser = myUser => {
-  for (user of users) {
-    if (myUser.userName === user.userName && myUser.password === user.password)
-      return user;
+  for (let i = 0; i < users.length; i++) {
+    if (
+      myUser.userName === users[i].userName &&
+      myUser.password === users[i].password
+    )
+      return users[i];
   }
 };
