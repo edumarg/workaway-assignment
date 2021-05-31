@@ -29,7 +29,7 @@ export const users = [
   }
 ];
 
-export const RegisterUser = newUser => {
+export const registerUser = newUser => {
   for (user of users) {
     if (newUser.userName === user.userName) {
       console.log("user name already exists");
@@ -41,4 +41,11 @@ export const RegisterUser = newUser => {
     }
   }
   users.push(newUser);
+};
+
+export const getUser = myUser => {
+  for (user of users) {
+    if (myUser.userName === user.userName && myUser.password === user.password)
+      return user;
+  }
 };
