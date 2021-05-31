@@ -4,11 +4,13 @@ import { Redirect, Router, Route, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
 
 // core components
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Admin from "layouts/Admin.js";
 import RTL from "layouts/RTL.js";
 import Welcome from "layouts/welcomePage";
 import Login from "views/Login/Login.js";
 import Register from "./views/Register/Register.js";
+import NotFound from "./layouts/notFound";
 
 const hist = createBrowserHistory();
 
@@ -51,9 +53,17 @@ class App extends Component {
               />
             )}
           />
-          <Route path="/admin" component={Admin} />
-          <Route path="/rtl" component={RTL} />
+          <ProtectedRoute
+            path="/admin"
+            render={props => <Admin user={this.state.user} {...props} />}
+          />
+          <ProtectedRoute
+            path="/rtl"
+            render={props => <RTL user={this.state.user} {...props} />}
+          />
           <Redirect from="/" exact to="/welcome" />
+          <Route path="/not-found" component={NotFound} />
+          <Redirect to="/not-found" />
         </Switch>
       </Router>
     );
