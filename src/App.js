@@ -22,6 +22,11 @@ class App extends Component {
     hist.replace("/welcome");
   };
 
+  handleRegistry = user => {
+    if (user) this.setState({ user });
+    hist.replace("/welcome");
+  };
+
   render() {
     const { user } = this.state;
     return (
@@ -37,8 +42,15 @@ class App extends Component {
               <Login onLogin={user => this.handleLogin(user)} {...props} />
             )}
           />
-          {/* <Route path="/login" component={Login} /> */}
-          <Route path="/register" component={Register} />
+          <Route
+            path="/register"
+            render={props => (
+              <Register
+                onRegister={user => this.handleRegistry(user)}
+                {...props}
+              />
+            )}
+          />
           <Route path="/admin" component={Admin} />
           <Route path="/rtl" component={RTL} />
           <Redirect from="/" exact to="/welcome" />

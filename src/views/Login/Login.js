@@ -12,12 +12,11 @@ class Login extends Component {
   state = { user: { userName: "", password: "" } };
 
   handleLogin = () => {
-    console.log("loged in called");
     const userToLog = { ...this.state.user };
     if (userToLog.userName && userToLog.password) {
       const myUser = getUser(userToLog);
       if (myUser) {
-        console.log("user logedin", this.state.user);
+        console.log("user successfuly logedin");
         this.props.onLogin(myUser);
       } else console.log("user not found!!!");
     }

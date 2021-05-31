@@ -33,26 +33,24 @@ const users = [
 ];
 
 export const registerUser = newUser => {
-  for (let i = 0; i < users.length; i++) {
-    if (newUser.userName === users[i].userName) {
+  for (let user of users) {
+    if (newUser.userName === user.userName) {
       console.log("user name already exists");
       return;
     }
-    if (newUser.email === users[i].email) {
+    if (newUser.email === user.email) {
       console.log("email already register");
       return;
     }
   }
   users.push(newUser);
+  console.log(users);
   return newUser;
 };
 
 export const getUser = myUser => {
-  for (let i = 0; i < users.length; i++) {
-    if (
-      myUser.userName === users[i].userName &&
-      myUser.password === users[i].password
-    )
-      return users[i];
+  for (let user of users) {
+    if (myUser.userName === user.userName && myUser.password === user.password)
+      return user;
   }
 };
