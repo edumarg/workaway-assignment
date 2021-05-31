@@ -21,7 +21,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 
 // core components
-import App from "/App";
+import App from "./App";
 import "assets/css/material-dashboard-react.css?v=1.8.0";
 
 ReactDOM.render(

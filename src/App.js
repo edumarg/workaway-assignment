@@ -12,12 +12,18 @@ import Register from "./views/Register/Register.js";
 const hist = createBrowserHistory();
 
 class App extends Component {
-  state = { user: "" };
+  state = {
+    user: ""
+  };
   render() {
+    const { user } = this.state;
     return (
       <Router history={hist}>
         <Switch>
-          <Route path="/welcome" component={Welcome} />
+          <Route
+            path="/welcome"
+            render={props => <Welcome user={user} {...props} />}
+          />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/admin" component={Admin} />
