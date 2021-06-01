@@ -1,15 +1,4 @@
-/* eslint-disable prettier/prettier */
-import { USER_LOGGEDIN, USER_LOGGEDOUT } from "./actionTypes";
+import { createAction } from "@reduxjs/toolkit";
 
-export function userLoggedIn(user) {
-  return {
-    type: USER_LOGGEDIN,
-    payload: user,
-  };
-}
-
-export function userLoggedOut() {
-  return {
-    type: USER_LOGGEDOUT,
-  };
-}
+export const userLoggedIn = createAction("userLoggedIn");
+export const userLoggedOut = createAction("userLoggedOut");
