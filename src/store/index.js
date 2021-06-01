@@ -1,7 +1,9 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-const-assign */
-import store from "./store";
+import configureStore from "./configureStore";
 import { userLoggedIn, userLoggedOut } from "./actions";
+
+const store = configureStore();
 
 let currentUser = {
   userName: "edumarg",
