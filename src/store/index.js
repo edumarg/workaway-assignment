@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-const-assign */
 import configureStore from "./configureStore";
-import { userLoggedIn, userLoggedOut } from "./actions";
+import { userLoggedIn, userLoggedOut } from "./auth";
 
 const store = configureStore();
 
