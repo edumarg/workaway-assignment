@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-const-assign */
 import store from "./store";
+import { userLoggedIn, userLoggedOut } from "./actions";
 
-const currentUser = {
+let currentUser = {
   userName: "edumarg",
   email: "edumarg@email.com",
   password: "Abc123",
@@ -14,18 +15,12 @@ const currentUser = {
 };
 
 delete currentUser.password;
+console.log(currentUser);
 
 store.subscribe(() => {
   console.log("Store Changes", store.getState());
 });
 
-store.dispatch({
-  type: "userLoggedin",
-  payload: currentUser,
-});
+store.dispatch(userLoggedIn(currentUser));
 
-console.log(currentUser);
-
-store.dispatch({
-  type: "userLooggedout",
-});
+store.dispatch(userLoggedOut());
