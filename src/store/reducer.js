@@ -1,8 +1,10 @@
-import { userLoggedIn, userLoggedOut } from "./actions";
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-unused-vars */
+import { createReducer } from "@reduxjs/toolkit";
 
-export default function reducer(state = [], action) {
-  if (action.type === userLoggedIn.type)
-    return [{ currentUser: action.payload }];
-  else if (action.type === userLoggedOut.type) return [];
-  else return state;
-}
+export default createReducer([], {
+  userLoggedIn: (state, action) => {
+    state.push({ currentUser: action.payload });
+  },
+  userLoggedOut: (state, action) => [],
+});
