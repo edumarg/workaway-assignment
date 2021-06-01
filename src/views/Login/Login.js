@@ -23,7 +23,7 @@ class Login extends Component {
     }
   };
 
-  handleOnChange = event => {
+  handleOnChange = (event) => {
     const myUser = { ...this.state.user };
     myUser[event.target.name] = event.target.value;
     this.setState({ user: myUser });
@@ -33,7 +33,7 @@ class Login extends Component {
     const myStyle = {
       textAlign: "center",
       width: "80%",
-      margin: "7rem auto"
+      margin: "7rem auto",
     };
 
     return (
@@ -47,10 +47,10 @@ class Login extends Component {
                 id="username"
                 inputProps={{
                   name: "userName",
-                  onChange: event => this.handleOnChange(event)
+                  onChange: (event) => this.handleOnChange(event),
                 }}
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
               />
             </GridItem>
@@ -61,10 +61,10 @@ class Login extends Component {
                 inputProps={{
                   name: "password",
                   type: "password",
-                  onChange: event => this.handleOnChange(event)
+                  onChange: (event) => this.handleOnChange(event),
                 }}
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
               />
             </GridItem>
