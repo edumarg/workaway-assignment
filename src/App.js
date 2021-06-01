@@ -23,12 +23,14 @@ class App extends Component {
 
   handleLogin = (user) => {
     console.log("handle login");
-    this.unsubscribe = store.subscribe(() => {
-      const currentUserInStore = store.getState()[0].currentUser;
-      if (this.state.user != currentUserInStore)
-        this.setState({ user: currentUserInStore });
-    });
-    if (user) store.dispatch(userLoggedIn(user));
+    if (user) {
+      this.unsubscribe = store.subscribe(() => {
+        const currentUserInStore = store.getState()[0].currentUser;
+        if (this.state.user != currentUserInStore)
+          this.setState({ user: currentUserInStore });
+      });
+      store.dispatch(userLoggedIn(user));
+    }
     hist.replace("/welcome");
   };
 
@@ -37,15 +39,10 @@ class App extends Component {
     this.unsubscribe();
   };
 
-  handleRegistry = (user) => {
-    if (user) this.setState({ user });
-    hist.replace("/welcome");
-  };
-
   render() {
     const { user } = this.state;
     return (
-      <UserContext.Provider value={store}>
+      <UserContext.Provider value={store.getState()[0].currentUser}>
         <Router history={hist}>
           <Switch>
             <Route path="/welcome" render={(props) => <Welcome {...props} />} />
@@ -59,7 +56,7 @@ class App extends Component {
               path="/register"
               render={(props) => (
                 <Register
-                  onRegister={(user) => this.handleRegistry(user)}
+                  onRegister={(user) => this.handleLogin(user)}
                   {...props}
                 />
               )}

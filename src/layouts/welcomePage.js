@@ -9,7 +9,7 @@ class Welcome extends Component {
   static contextType = UserContext;
 
   render() {
-    const { userName } = this.context.getState()[0].currentUser;
+    const { userName } = this.context;
     const myStyle = {
       textAlign: "center",
       width: "80%",
