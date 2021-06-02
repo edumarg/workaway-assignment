@@ -16,5 +16,5 @@ if (!config.get("jwtPrivateKey")) {
 
 //Change  hardcode  port "9000"  by config.get("port")
 
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT || config.get("port");
 app.listen(PORT, () => console.log(`listening on port ${PORT}...`));

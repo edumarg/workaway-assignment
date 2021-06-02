@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
+const config = require("config");
 
 //change hardcode db link by config.get("db")
 
 module.exports = function() {
   mongoose
-    .connect("mongodb://localhost:27017/workaway", {
+    .connect(config.get("db"), {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
