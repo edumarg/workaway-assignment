@@ -52,8 +52,13 @@ class App extends Component {
         "http://localhost:9000/api/register",
         user
       );
-      const newUser = response.data;
-      this.handleLogin(newUser);
+      if (response.status !== 200) {
+        console.log("There was an issue login in...");
+        return;
+      } else {
+        const newUser = response.data;
+        this.handleLogin(newUser);
+      }
     }
   };
 
