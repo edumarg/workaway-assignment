@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect, Router, Route, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
+import axios from "axios";
 
 // core components
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
@@ -21,17 +22,33 @@ class App extends Component {
     user: "",
   };
 
-  handleLogin = (user) => {
-    console.log("handle login");
+  handleLogin = async (user) => {
     if (user) {
       this.unsubscribe = store.subscribe(() => {
         const currentUserInStore = store.getState()[0].currentUser;
         if (this.state.user !== currentUserInStore)
           this.setState({ user: currentUserInStore });
       });
-      store.dispatch(userLoggedIn(user));
+      const response = await axios.post(
+        "http://localhost:9000/api/login",
+        user
+      );
+      const myUser = response.data;
+      console.log(myUser);
+      store.dispatch(userLoggedIn(myUser));
     }
     hist.replace("/welcome");
+  };
+
+  handleRegister = async (user) => {
+    if (user) {
+      const response = await axios.post(
+        "http://localhost:9000/api/register",
+        user
+      );
+      const newUser = response.data;
+      this.handleLogin(newUser);
+    }
   };
 
   handleLogout = () => {
@@ -59,7 +76,7 @@ class App extends Component {
               path="/register"
               render={(props) => (
                 <Register
-                  onRegister={(user) => this.handleLogin(user)}
+                  onRegister={(user) => this.handleRegister(user)}
                   {...props}
                 />
               )}
