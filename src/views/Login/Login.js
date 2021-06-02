@@ -17,7 +17,6 @@ class Login extends Component {
       const myUser = getUser(userToLog);
       if (myUser) {
         console.log("user successfuly logedin");
-        delete myUser.password;
         this.props.onLogin(myUser);
       } else console.log("user not found!!!");
     }

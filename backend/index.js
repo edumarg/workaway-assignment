@@ -4,16 +4,17 @@ const cors = require("cors");
 const app = express();
 
 require("./db")();
-// const User = require("./userModel");
+const User = require("./userModel");
 
 app.use(cors());
 app.use(express.json());
 
-app.post("/api/login", (req, res) => {
-  const user = req.body;
-  console.log("user reseived", user);
+app.post("/api/login", async (req, res) => {
+  console.log("user reseived", req.body);
+  const { userName, password } = req.body;
+  let user = await User.findOne({ userName: userName, password: password });
   if (!user) {
-    res.status(404).send("User not found");
+    return res.status(400).send("Invalid email or password.");
   }
   res.send(user);
 });
@@ -26,7 +27,7 @@ app.post("/api/register", (req, res) => {
 });
 
 app.post("/api/logout", (req, res) => {
-  res.send("logout");
+  res.send("logged out...");
 });
 
 const PORT = process.env.PORT || 9000;

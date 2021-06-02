@@ -24,18 +24,24 @@ class App extends Component {
 
   handleLogin = async (user) => {
     if (user) {
-      this.unsubscribe = store.subscribe(() => {
-        const currentUserInStore = store.getState()[0].currentUser;
-        if (this.state.user !== currentUserInStore)
-          this.setState({ user: currentUserInStore });
-      });
       const response = await axios.post(
         "http://localhost:9000/api/login",
         user
       );
-      const myUser = response.data;
-      console.log(myUser);
-      store.dispatch(userLoggedIn(myUser));
+      if (response.status !== 200) {
+        console.log("There was an issue login in...");
+        return;
+      } else {
+        this.unsubscribe = store.subscribe(() => {
+          const currentUserInStore = store.getState()[0].currentUser;
+          if (this.state.user !== currentUserInStore)
+            this.setState({ user: currentUserInStore });
+        });
+        const myUser = response.data;
+        delete myUser.password;
+        console.log("logged in as: ", myUser.userName);
+        store.dispatch(userLoggedIn(myUser));
+      }
     }
     hist.replace("/welcome");
   };
