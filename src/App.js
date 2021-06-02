@@ -16,12 +16,11 @@ import configureStore from "./store/configureStore";
 import { userLoggedIn, userLoggedOut } from "./store/auth";
 import UserContext from "./contexts/userContext";
 
-import config from "./config.json";
-
 const hist = createBrowserHistory();
 const store = configureStore();
-const tokenKey = config.tokenKey;
-const apiUrl = config.apiUrl;
+const tokenKey = process.env.REACT_APP_TOKENKEY;
+const apiUrl = process.env.REACT_APP_APIURL;
+
 class App extends Component {
   state = {
     user: "",

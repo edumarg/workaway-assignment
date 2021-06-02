@@ -4,8 +4,9 @@ const config = require("config");
 //change hardcode db link by config.get("db")
 
 module.exports = function() {
+  const db = config.get("db");
   mongoose
-    .connect(config.get("db"), {
+    .connect(db, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
