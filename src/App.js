@@ -26,7 +26,7 @@ class App extends Component {
     if (user) {
       this.unsubscribe = store.subscribe(() => {
         const currentUserInStore = store.getState()[0].currentUser;
-        if (this.state.user != currentUserInStore)
+        if (this.state.user !== currentUserInStore)
           this.setState({ user: currentUserInStore });
       });
       store.dispatch(userLoggedIn(user));
@@ -35,8 +35,11 @@ class App extends Component {
   };
 
   handleLogout = () => {
+    console.log("handle logout");
+    this.setState({ user: "" });
     store.dispatch(userLoggedOut());
     this.unsubscribe();
+    hist.replace("/welcome");
   };
 
   render() {
@@ -61,7 +64,12 @@ class App extends Component {
                 />
               )}
             />
-            <ProtectedRoute path="/admin" component={Admin} user={user} />
+            <ProtectedRoute
+              path="/admin"
+              component={Admin}
+              user={user}
+              onLogout={() => this.handleLogout()}
+            />
             <ProtectedRoute path="/rtl" component={RTL} user={user} />
             <Redirect from="/" exact to="/welcome" />
             <Route path="/not-found" component={NotFound} />
