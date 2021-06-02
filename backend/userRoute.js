@@ -1,5 +1,8 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const config = require("config");
+const _ = require("lodash");
 
 const app = express();
 const User = require("./userModel");
@@ -16,7 +19,12 @@ app.post("/api/login", async (req, res) => {
 
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) return res.status(400).send("Invalid email or password.");
-  res.send(user);
+  const { firstName, lastName, email, city, country, postalCode } = user;
+  const token = jwt.sign(
+    { userName, firstName, lastName, email, city, country, postalCode },
+    config.get("jwtPrivateKey")
+  );
+  res.send(token);
 });
 
 app.post("/api/register", async (req, res) => {
@@ -33,7 +41,36 @@ app.post("/api/register", async (req, res) => {
   newUser.password = await bcrypt.hash(newUser.password, salt);
 
   const result = await newUser.save();
-  res.send(result);
+
+  const {
+    userName,
+    firstName,
+    lastName,
+    email,
+    city,
+    country,
+    postalCode,
+  } = result;
+
+  const token = jwt.sign(
+    { userName, firstName, lastName, email, city, country, postalCode },
+    config.get("jwtPrivateKey")
+  );
+
+  res
+    .header("x-auth-token", token)
+    .header("access-control-expose-headers", "x-auth-token")
+    .send(
+      _.pick(result, [
+        "userName",
+        "firstName",
+        "lastName",
+        "email",
+        "city",
+        "country",
+        "postalCode",
+      ])
+    );
 });
 
 app.post("/api/logout", (req, res) => {

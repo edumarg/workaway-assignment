@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+//change hardcode db link by config.get("db")
+
 module.exports = function() {
   mongoose
     .connect("mongodb://localhost:27017/workaway", {
