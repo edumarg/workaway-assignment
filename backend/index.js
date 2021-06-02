@@ -1,6 +1,7 @@
-var express = require("express");
-var cors = require("cors");
-var app = express();
+const express = require("express");
+const cors = require("cors");
+const app = express();
+const mongoose = require("mongoose");
 
 app.use(cors());
 app.use(express.json());
@@ -27,3 +28,10 @@ app.post("/api/logout", (req, res) => {
 
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => console.log(`listening on port ${PORT}...`));
+
+mongoose
+  .connect("mongodb://localhost:27017/workaway", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("Connected to MongoDB..."));
