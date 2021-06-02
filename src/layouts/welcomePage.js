@@ -3,17 +3,20 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 
 import Button from "components/CustomButtons/Button.js";
+import UserContext from "./../contexts/userContext";
 
 class Welcome extends Component {
+  static contextType = UserContext;
+
   render() {
-    const { user } = this.props;
+    const { userName } = this.context;
     const myStyle = {
       textAlign: "center",
       width: "80%",
-      margin: "7rem auto"
+      margin: "7rem auto",
     };
 
-    if (!user)
+    if (!userName)
       return (
         <React.Fragment>
           <div style={myStyle}>

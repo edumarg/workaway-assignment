@@ -3,11 +3,10 @@ import React, { Component } from "react";
 
 class NotFound extends Component {
   render() {
-    const { user } = this.props;
     const myStyle = {
       textAlign: "center",
       width: "80%",
-      margin: "7rem auto"
+      margin: "7rem auto",
     };
     return (
       <React.Fragment>

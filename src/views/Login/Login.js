@@ -6,24 +6,19 @@ import GridContainer from "components/Grid/GridContainer.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 
-import { getUser } from "users";
-
 class Login extends Component {
   state = { user: { userName: "", password: "" } };
 
   handleLogin = () => {
     const userToLog = { ...this.state.user };
-    if (userToLog.userName && userToLog.password) {
-      const myUser = getUser(userToLog);
-      if (myUser) {
-        console.log("user successfuly logedin");
-        delete myUser.password;
-        this.props.onLogin(myUser);
-      } else console.log("user not found!!!");
+    if (userToLog.userName && userToLog.password) this.props.onLogin(userToLog);
+    else {
+      console.log("invalid user and password!!!");
+      return;
     }
   };
 
-  handleOnChange = event => {
+  handleOnChange = (event) => {
     const myUser = { ...this.state.user };
     myUser[event.target.name] = event.target.value;
     this.setState({ user: myUser });
@@ -33,7 +28,7 @@ class Login extends Component {
     const myStyle = {
       textAlign: "center",
       width: "80%",
-      margin: "7rem auto"
+      margin: "7rem auto",
     };
 
     return (
@@ -47,10 +42,10 @@ class Login extends Component {
                 id="username"
                 inputProps={{
                   name: "userName",
-                  onChange: event => this.handleOnChange(event)
+                  onChange: (event) => this.handleOnChange(event),
                 }}
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
               />
             </GridItem>
@@ -61,10 +56,10 @@ class Login extends Component {
                 inputProps={{
                   name: "password",
                   type: "password",
-                  onChange: event => this.handleOnChange(event)
+                  onChange: (event) => this.handleOnChange(event),
                 }}
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
               />
             </GridItem>
