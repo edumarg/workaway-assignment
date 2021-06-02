@@ -42,7 +42,6 @@ export default function UserProfile() {
   const classes = useStyles();
 
   const currentUser = useContext(UserContext);
-  console.log(currentUser);
 
   return (
     <div>

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Redirect, Router, Route, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
 
 // core components
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
@@ -15,55 +16,68 @@ import configureStore from "./store/configureStore";
 import { userLoggedIn, userLoggedOut } from "./store/auth";
 import UserContext from "./contexts/userContext";
 
+import config from "./config.json";
+
 const hist = createBrowserHistory();
 const store = configureStore();
+const tokenKey = config.tokenKey;
+const apiUrl = config.apiUrl;
 class App extends Component {
   state = {
     user: "",
   };
 
+  getCurrentUser = () => {
+    const token = localStorage.getItem(tokenKey);
+    const myUser = jwtDecode(token);
+    return myUser;
+  };
+
   handleLogin = async (user) => {
-    if (user) {
-      const response = await axios.post(
-        "http://localhost:9000/api/login",
-        user
-      );
-      if (response.status !== 200) {
-        console.log("There was an issue login in...");
-        return;
-      } else {
+    if (user)
+      try {
+        const response = await axios.post(`${apiUrl}/login`, user);
         this.unsubscribe = store.subscribe(() => {
           const currentUserInStore = store.getState()[0].currentUser;
           if (this.state.user !== currentUserInStore)
             this.setState({ user: currentUserInStore });
         });
-        const myUser = response.data;
-        delete myUser.password;
-        console.log("logged in as: ", myUser.userName);
+        const token = response.data;
+        localStorage.setItem(tokenKey, token);
+        const myUser = this.getCurrentUser();
         store.dispatch(userLoggedIn(myUser));
+        hist.replace("/welcome");
+      } catch (exception) {
+        if (exception.response && exception.response.status === 400)
+          console.log("There was an issue login in...");
+        return;
       }
-    }
-    hist.replace("/welcome");
   };
 
   handleRegister = async (user) => {
     if (user) {
-      const response = await axios.post(
-        "http://localhost:9000/api/register",
-        user
-      );
-      if (response.status !== 200) {
-        console.log("There was an issue login in...");
-        return;
-      } else {
-        const newUser = response.data;
-        this.handleLogin(newUser);
+      try {
+        const response = await axios.post(`${apiUrl}/register`, user);
+        this.unsubscribe = store.subscribe(() => {
+          const currentUserInStore = store.getState()[0].currentUser;
+          if (this.state.user !== currentUserInStore)
+            this.setState({ user: currentUserInStore });
+        });
+        const token = response.headers["x-auth-token"];
+        localStorage.setItem(tokenKey, token);
+        const myUser = this.getCurrentUser();
+        store.dispatch(userLoggedIn(myUser));
+        hist.replace("/welcome");
+      } catch (exception) {
+        if (exception.response && exception.response.status === 400)
+          console.log("User alredy exists");
       }
     }
   };
 
   handleLogout = () => {
     console.log("handle logout");
+    localStorage.removeItem(tokenKey);
     this.setState({ user: "" });
     store.dispatch(userLoggedOut());
     this.unsubscribe();
