@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-
 const app = express();
 
 require("./db")();
@@ -17,13 +16,6 @@ app.post("/api/login", async (req, res) => {
   }
   res.send(user);
 });
-
-// app.post("/api/register", (req, res) => {
-//   console.log("register user");
-//   const user = req.body;
-//   console.log("user reseived", user);
-//   res.send(user);
-// });
 
 app.post("/api/register", async (req, res) => {
   const body = req.body;

@@ -6,19 +6,15 @@ import GridContainer from "components/Grid/GridContainer.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 
-import { getUser } from "users";
-
 class Login extends Component {
   state = { user: { userName: "", password: "" } };
 
   handleLogin = () => {
     const userToLog = { ...this.state.user };
-    if (userToLog.userName && userToLog.password) {
-      const myUser = getUser(userToLog);
-      if (myUser) {
-        console.log("user successfuly logedin");
-        this.props.onLogin(myUser);
-      } else console.log("user not found!!!");
+    if (userToLog.userName && userToLog.password) this.props.onLogin(userToLog);
+    else {
+      console.log("invalid user and password!!!");
+      return;
     }
   };
 
