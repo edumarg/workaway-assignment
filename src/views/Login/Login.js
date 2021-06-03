@@ -5,6 +5,7 @@ import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
+import { toast } from "react-toastify";
 
 class Login extends Component {
   state = { user: { userName: "", password: "" } };
@@ -13,7 +14,7 @@ class Login extends Component {
     const userToLog = { ...this.state.user };
     if (userToLog.userName && userToLog.password) this.props.onLogin(userToLog);
     else {
-      console.log("invalid user and password!!!");
+      toast.error("Invalid user and password!!!");
       return;
     }
   };

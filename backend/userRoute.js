@@ -14,7 +14,7 @@ app.post("/api/login", async (req, res) => {
     userName: userName,
   });
   if (!user) {
-    return res.status(400).send("Invalid username or password.");
+    res.status(400).send("Invalid username or password.");
   }
 
   const validPassword = await bcrypt.compare(password, user.password);
@@ -74,7 +74,10 @@ app.post("/api/register", async (req, res) => {
 });
 
 app.post("/api/logout", (req, res) => {
-  res.send("logged out...");
+  res
+    .header("x-auth-token", "")
+    .header("access-control-expose-headers", "x-auth-token")
+    .send("logged out...");
 });
 
 module.exports = app;

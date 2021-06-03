@@ -1,47 +1,47 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from "react";
+import { toast } from "react-toastify";
 
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 
-import { registerUser } from "users";
-
 class Register extends Component {
   state = {
-    user: {}
+    user: {},
   };
 
-  handleOnChange = event => {
+  handleOnChange = (event) => {
     const myUser = { ...this.state.user };
     myUser[event.target.name] = event.target.value;
     this.setState({ user: myUser });
   };
 
   handleRegister = () => {
-    console.log("--Registry called---");
+    const lengthOfUserProperties = 8;
     const userToRegister = { ...this.state.user };
-    if (!userToRegister) return;
-    for (let [myKey, myValue] of Object.entries(userToRegister)) {
-      if (!myValue) {
-        console.log("no user to register");
-        return;
-      }
+
+    if (Object.keys(userToRegister).length === 0) {
+      toast.error(
+        "Cannot register and empty user. Please make sure to fill all the fields"
+      );
+      return;
     }
-    const myNewUser = registerUser(userToRegister);
-    if (myNewUser) {
-      console.log("user succesfully registerd");
-      // eslint-disable-next-line react/prop-types
-      this.props.onRegister(myNewUser);
-    } else console.log("user registry failed");
+    if (Object.keys(userToRegister).length !== lengthOfUserProperties) {
+      toast.error(
+        "Cannot register and user with missing information. Please make sure to fill all the fields"
+      );
+      return;
+    }
+    this.props.onRegister(userToRegister);
   };
 
   render() {
     const myStyle = {
       textAlign: "center",
       width: "80%",
-      margin: "7rem auto"
+      margin: "7rem auto",
     };
 
     return (
@@ -55,10 +55,10 @@ class Register extends Component {
                 id="username"
                 inputProps={{
                   name: "userName",
-                  onChange: event => this.handleOnChange(event)
+                  onChange: (event) => this.handleOnChange(event),
                 }}
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
               />
             </GridItem>
@@ -69,10 +69,10 @@ class Register extends Component {
                 inputProps={{
                   name: "password",
                   type: "password",
-                  onChange: event => this.handleOnChange(event)
+                  onChange: (event) => this.handleOnChange(event),
                 }}
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
               />
             </GridItem>
@@ -82,10 +82,10 @@ class Register extends Component {
                 id="email-address"
                 inputProps={{
                   name: "email",
-                  onChange: event => this.handleOnChange(event)
+                  onChange: (event) => this.handleOnChange(event),
                 }}
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
               />
             </GridItem>
@@ -97,10 +97,10 @@ class Register extends Component {
                 id="first-name"
                 inputProps={{
                   name: "firstName",
-                  onChange: event => this.handleOnChange(event)
+                  onChange: (event) => this.handleOnChange(event),
                 }}
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
               />
             </GridItem>
@@ -110,10 +110,10 @@ class Register extends Component {
                 id="last-name"
                 inputProps={{
                   name: "lastName",
-                  onChange: event => this.handleOnChange(event)
+                  onChange: (event) => this.handleOnChange(event),
                 }}
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
               />
             </GridItem>
@@ -125,10 +125,10 @@ class Register extends Component {
                 id="city"
                 inputProps={{
                   name: "city",
-                  onChange: event => this.handleOnChange(event)
+                  onChange: (event) => this.handleOnChange(event),
                 }}
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
               />
             </GridItem>
@@ -138,10 +138,10 @@ class Register extends Component {
                 id="country"
                 inputProps={{
                   name: "country",
-                  onChange: event => this.handleOnChange(event)
+                  onChange: (event) => this.handleOnChange(event),
                 }}
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
               />
             </GridItem>
@@ -151,10 +151,10 @@ class Register extends Component {
                 id="postal-code"
                 inputProps={{
                   name: "postalCode",
-                  onChange: event => this.handleOnChange(event)
+                  onChange: (event) => this.handleOnChange(event),
                 }}
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
               />
             </GridItem>

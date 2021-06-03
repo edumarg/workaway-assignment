@@ -3,6 +3,8 @@ import { Redirect, Router, Route, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // core components
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
@@ -27,10 +29,28 @@ class App extends Component {
   };
 
   getCurrentUser = () => {
-    const token = localStorage.getItem(tokenKey);
-    const myUser = jwtDecode(token);
-    return myUser;
+    try {
+      const token = localStorage.getItem(tokenKey);
+      const myUser = jwtDecode(token);
+      return myUser;
+    } catch (exception) {
+      return null;
+    }
   };
+
+  setCurrentUser(user) {
+    store.dispatch(userLoggedIn(user));
+    this.setState({ user: user });
+    hist.replace("/welcome");
+  }
+  componentDidMount() {
+    const myUser = this.getCurrentUser();
+    if (myUser) this.setCurrentUser(myUser);
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
 
   handleLogin = async (user) => {
     if (user)
@@ -44,11 +64,13 @@ class App extends Component {
         const token = response.data;
         localStorage.setItem(tokenKey, token);
         const myUser = this.getCurrentUser();
-        store.dispatch(userLoggedIn(myUser));
-        hist.replace("/welcome");
+        // store.dispatch(userLoggedIn(myUser));
+        // hist.replace("/welcome");
+        this.setCurrentUser(myUser);
+        toast.success(`Logged in as:\n User: ${myUser.userName}`);
       } catch (exception) {
         if (exception.response && exception.response.status === 400)
-          console.log("There was an issue login in...");
+          toast.error("Invalid username or password");
         return;
       }
   };
@@ -65,11 +87,13 @@ class App extends Component {
         const token = response.headers["x-auth-token"];
         localStorage.setItem(tokenKey, token);
         const myUser = this.getCurrentUser();
-        store.dispatch(userLoggedIn(myUser));
-        hist.replace("/welcome");
+        // store.dispatch(userLoggedIn(myUser));
+        // hist.replace("/welcome");
+        this.setCurrentUser(myUser);
+        toast.success(`Registry success: User: ${myUser.userName}`);
       } catch (exception) {
         if (exception.response && exception.response.status === 400)
-          console.log("User alredy exists");
+          toast.error("Username or email already registered");
       }
     }
   };
@@ -80,44 +104,63 @@ class App extends Component {
     this.setState({ user: "" });
     store.dispatch(userLoggedOut());
     this.unsubscribe();
+    toast.info("User logged out.\nGood bye...");
     hist.replace("/welcome");
   };
 
   render() {
     const { user } = this.state;
     return (
-      <UserContext.Provider value={store.getState()[0].currentUser}>
-        <Router history={hist}>
-          <Switch>
-            <Route path="/welcome" render={(props) => <Welcome {...props} />} />
-            <Route
-              path="/login"
-              render={(props) => (
-                <Login onLogin={(user) => this.handleLogin(user)} {...props} />
-              )}
-            />
-            <Route
-              path="/register"
-              render={(props) => (
-                <Register
-                  onRegister={(user) => this.handleRegister(user)}
-                  {...props}
-                />
-              )}
-            />
-            <ProtectedRoute
-              path="/admin"
-              component={Admin}
-              user={user}
-              onLogout={() => this.handleLogout()}
-            />
-            <ProtectedRoute path="/rtl" component={RTL} user={user} />
-            <Redirect from="/" exact to="/welcome" />
-            <Route path="/not-found" component={NotFound} />
-            <Redirect to="/not-found" />
-          </Switch>
-        </Router>
-      </UserContext.Provider>
+      <React.Fragment>
+        <ToastContainer
+          position="top-left"
+          autoClose={3500}
+          newestOnTop
+          hideProgressBar
+          closeOnClick
+          rtl={false}
+          draggable
+          pauseOnHover
+        />
+        <UserContext.Provider value={store.getState()[0].currentUser}>
+          <Router history={hist}>
+            <Switch>
+              <Route
+                path="/welcome"
+                render={(props) => <Welcome {...props} />}
+              />
+              <Route
+                path="/login"
+                render={(props) => (
+                  <Login
+                    onLogin={(user) => this.handleLogin(user)}
+                    {...props}
+                  />
+                )}
+              />
+              <Route
+                path="/register"
+                render={(props) => (
+                  <Register
+                    onRegister={(user) => this.handleRegister(user)}
+                    {...props}
+                  />
+                )}
+              />
+              <ProtectedRoute
+                path="/admin"
+                component={Admin}
+                user={user}
+                onLogout={() => this.handleLogout()}
+              />
+              <ProtectedRoute path="/rtl" component={RTL} user={user} />
+              <Redirect from="/" exact to="/welcome" />
+              <Route path="/not-found" component={NotFound} />
+              <Redirect to="/not-found" />
+            </Switch>
+          </Router>
+        </UserContext.Provider>
+      </React.Fragment>
     );
   }
 }
