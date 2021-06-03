@@ -16,11 +16,29 @@ class Login extends Component {
 
   handleLogin = () => {
     const userToLog = { ...this.state.user };
-    if (userToLog.userName && userToLog.password) {
-      this.props.onLogin(userToLog);
-    } else {
-      toast.error("Invalid user and password!!!");
+    const userNameRegex = new RegExp(
+      /^(?=[a-zA-Z0-9._]{6,16}$)(?!.*[_.]{2})[^_.].*[^_.]$/
+    );
+    const passwordRegex = new RegExp(
+      /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.*s).{8,16}$/
+    );
+
+    // userName Validation
+    if (!userNameRegex.test(userToLog.userName)) {
+      toast.error(
+        "User Name must be at least 6 characters, no more than 16 characters and with no special characters, "
+      );
       return;
+    }
+
+    // password Validation
+    else if (!passwordRegex.test(userToLog.password)) {
+      toast.error(
+        "Password must be at least 8 characters, no more than 16 characters, and must include at least one upper case letter, one lower case letter, and one numeric digit. "
+      );
+      return;
+    } else if (userToLog.userName && userToLog.password) {
+      this.props.onLogin(userToLog);
     }
   };
 
