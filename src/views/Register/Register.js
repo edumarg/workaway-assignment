@@ -36,6 +36,15 @@ class Register extends Component {
       );
       return;
     }
+    const re = new RegExp(
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    );
+    if (!re.test(userToRegister.email)) {
+      toast.error(
+        "Cannot register user with invalid email. Please make sure to use a valid email"
+      );
+      return;
+    }
     this.props.onRegister(userToRegister);
   };
 
