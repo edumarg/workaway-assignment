@@ -124,7 +124,7 @@ class App extends Component {
       <React.Fragment>
         <ToastContainer
           position="top-left"
-          autoClose={3500}
+          autoClose={4500}
           newestOnTop
           hideProgressBar
           closeOnClick

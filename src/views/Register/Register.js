@@ -32,19 +32,77 @@ class Register extends Component {
     }
     if (Object.keys(userToRegister).length !== lengthOfUserProperties) {
       toast.error(
-        "Cannot register and user with missing information. Please make sure to fill all the fields"
+        "Cannot register an user with missing information. Please make sure to fill all the fields"
       );
       return;
     }
-    const re = new RegExp(
+
+    // userName Validation
+    const userNameRegex = new RegExp(
+      /^(?=[a-zA-Z0-9._]{6,16}$)(?!.*[_.]{2})[^_.].*[^_.]$/
+    );
+    if (!userNameRegex.test(userToRegister.userName)) {
+      toast.error(
+        "User Name must be at least 6 characters, no more than 16 characters and with no special characters, "
+      );
+      return;
+    }
+
+    // password Validation
+    const passwordRegex = new RegExp(
+      /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.*s).{8,16}$/
+    );
+    if (!passwordRegex.test(userToRegister.password)) {
+      toast.error(
+        "Password must be at least 8 characters, no more than 16 characters, and must include at least one upper case letter, one lower case letter, and one numeric digit. "
+      );
+      return;
+    }
+
+    // email Validation
+    const emailRegex = new RegExp(
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
     );
-    if (!re.test(userToRegister.email)) {
+    if (!emailRegex.test(userToRegister.email)) {
       toast.error(
         "Cannot register user with invalid email. Please make sure to use a valid email"
       );
       return;
     }
+
+    // firstName and lastName Validation
+    const nameRegex = new RegExp(/^[a-z ,.'-]+.{2,50}$/i);
+    // firstName Validation
+    if (!nameRegex.test(userToRegister.firstName)) {
+      toast.error("Please enter a valid First Name");
+      return;
+    }
+    // lastName Validation
+    if (!nameRegex.test(userToRegister.lastName)) {
+      toast.error("Please enter a valid Last Name");
+      return;
+    }
+
+    //city and country Validation
+    const cityRegex = new RegExp(/^[a-zA-Z\u0080-\u024F\s\/\-\)\(\`\.\"\']+$/);
+    // city Validation
+    if (!cityRegex.test(userToRegister.city)) {
+      toast.error("Please enter a valid City");
+      return;
+    }
+    // country Validation
+    if (!cityRegex.test(userToRegister.country)) {
+      toast.error("Please enter a valid Country");
+      return;
+    }
+
+    //Postal Code Validation
+    const postalCodeRegex = new RegExp(/^[a-z0-9][a-z0-9\- ]{0,10}[a-z0-9]$/i);
+    if (!postalCodeRegex.test(userToRegister.postalCode)) {
+      toast.error("Please enter a postal code");
+      return;
+    }
+
     this.props.onRegister(userToRegister);
   };
 
