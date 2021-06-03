@@ -74,8 +74,10 @@ class App extends Component {
       } catch (exception) {
         if (exception.response && exception.response.status === 400) {
           toast.error("Invalid username or password");
-          this.setState({ waiting: "hidden" });
+        } else {
+          toast.error("An unexpected error ocurred");
         }
+        this.setState({ waiting: "hidden" });
         return;
       }
   };
@@ -101,8 +103,10 @@ class App extends Component {
       } catch (exception) {
         if (exception.response && exception.response.status === 400) {
           toast.error("Username or email already registered");
-          this.setState({ waiting: "hidden" });
+        } else {
+          toast.error("An unexpected error ocurred");
         }
+        this.setState({ waiting: "hidden" });
         return;
       }
     }
