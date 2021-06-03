@@ -26,6 +26,7 @@ const apiUrl = process.env.REACT_APP_APIURL;
 class App extends Component {
   state = {
     user: "",
+    waiting: "hidden",
   };
 
   getCurrentUser = () => {
@@ -55,6 +56,7 @@ class App extends Component {
   handleLogin = async (user) => {
     if (user)
       try {
+        this.setState({ waiting: "visible" });
         const response = await axios.post(`${apiUrl}/login`, user);
         this.unsubscribe = store.subscribe(() => {
           const currentUserInStore = store.getState()[0].currentUser;
@@ -68,9 +70,12 @@ class App extends Component {
         // hist.replace("/welcome");
         this.setCurrentUser(myUser);
         toast.success(`Logged in as:\n User: ${myUser.userName}`);
+        this.setState({ waiting: "hidden" });
       } catch (exception) {
-        if (exception.response && exception.response.status === 400)
+        if (exception.response && exception.response.status === 400) {
           toast.error("Invalid username or password");
+          this.setState({ waiting: "hidden" });
+        }
         return;
       }
   };
@@ -78,6 +83,7 @@ class App extends Component {
   handleRegister = async (user) => {
     if (user) {
       try {
+        this.setState({ waiting: "visible" });
         const response = await axios.post(`${apiUrl}/register`, user);
         this.unsubscribe = store.subscribe(() => {
           const currentUserInStore = store.getState()[0].currentUser;
@@ -91,9 +97,13 @@ class App extends Component {
         // hist.replace("/welcome");
         this.setCurrentUser(myUser);
         toast.success(`Registry success: User: ${myUser.userName}`);
+        this.setState({ waiting: "hidden" });
       } catch (exception) {
-        if (exception.response && exception.response.status === 400)
+        if (exception.response && exception.response.status === 400) {
           toast.error("Username or email already registered");
+          this.setState({ waiting: "hidden" });
+        }
+        return;
       }
     }
   };
@@ -134,6 +144,7 @@ class App extends Component {
                 render={(props) => (
                   <Login
                     onLogin={(user) => this.handleLogin(user)}
+                    waitingToLog={this.state.waiting}
                     {...props}
                   />
                 )}
@@ -143,6 +154,7 @@ class App extends Component {
                 render={(props) => (
                   <Register
                     onRegister={(user) => this.handleRegister(user)}
+                    waitingToRegister={this.state.waiting}
                     {...props}
                   />
                 )}

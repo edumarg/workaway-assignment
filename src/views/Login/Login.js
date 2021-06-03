@@ -5,15 +5,20 @@ import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
+import Spinner from "react-bootstrap/Spinner";
 import { toast } from "react-toastify";
 
 class Login extends Component {
-  state = { user: { userName: "", password: "" } };
+  constructor(props) {
+    super(props);
+    this.state = { user: { userName: "", password: "" } };
+  }
 
   handleLogin = () => {
     const userToLog = { ...this.state.user };
-    if (userToLog.userName && userToLog.password) this.props.onLogin(userToLog);
-    else {
+    if (userToLog.userName && userToLog.password) {
+      this.props.onLogin(userToLog);
+    } else {
       toast.error("Invalid user and password!!!");
       return;
     }
@@ -70,6 +75,15 @@ class Login extends Component {
               <Button color="primary" onClick={() => this.handleLogin()}>
                 Login
               </Button>
+            </GridItem>
+          </GridContainer>
+          <GridContainer>
+            <GridItem xs={12} sm={12} md={12}>
+              <Spinner
+                animation="border"
+                variant="danger"
+                style={{ visibility: this.props.waitingToLog }}
+              />
             </GridItem>
           </GridContainer>
         </div>

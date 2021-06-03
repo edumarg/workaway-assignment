@@ -6,11 +6,13 @@ import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
+import Spinner from "react-bootstrap/Spinner";
 
 class Register extends Component {
-  state = {
-    user: {},
-  };
+  constructor(props) {
+    super(props);
+    this.state = { user: {} };
+  }
 
   handleOnChange = (event) => {
     const myUser = { ...this.state.user };
@@ -164,6 +166,15 @@ class Register extends Component {
               <Button color="primary" onClick={() => this.handleRegister()}>
                 Register User
               </Button>
+            </GridItem>
+          </GridContainer>
+          <GridContainer>
+            <GridItem xs={12} sm={12} md={12}>
+              <Spinner
+                animation="border"
+                variant="danger"
+                style={{ visibility: this.props.waitingToRegister }}
+              />
             </GridItem>
           </GridContainer>
         </div>

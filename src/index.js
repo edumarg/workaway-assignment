@@ -24,6 +24,7 @@ import { BrowserRouter } from "react-router-dom";
 // core components
 import App from "./App";
 import "assets/css/material-dashboard-react.css?v=1.8.0";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 ReactDOM.render(
   <BrowserRouter>
