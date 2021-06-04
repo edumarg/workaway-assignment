@@ -21,18 +21,11 @@ class Register extends Component {
   };
 
   handleRegister = () => {
-    const lengthOfUserProperties = 8;
     const userToRegister = { ...this.state.user };
 
     if (Object.keys(userToRegister).length === 0) {
       toast.error(
         "Cannot register and empty user. Please make sure to fill all the fields"
-      );
-      return;
-    }
-    if (Object.keys(userToRegister).length !== lengthOfUserProperties) {
-      toast.error(
-        "Cannot register an user with missing information. Please make sure to fill all the fields"
       );
       return;
     }

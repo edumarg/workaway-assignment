@@ -17,6 +17,7 @@ import NotFound from "./layouts/notFound";
 import configureStore from "./store/configureStore";
 import { userLoggedIn, userLoggedOut } from "./store/auth";
 import UserContext from "./contexts/userContext";
+import WaitingContext from "./contexts/waitingContext";
 
 const hist = createBrowserHistory();
 const store = configureStore();
@@ -66,8 +67,6 @@ class App extends Component {
         const token = response.data;
         localStorage.setItem(tokenKey, token);
         const myUser = this.getCurrentUser();
-        // store.dispatch(userLoggedIn(myUser));
-        // hist.replace("/welcome");
         this.setCurrentUser(myUser);
         toast.success(`Logged in as:\n User: ${myUser.userName}`);
         this.setState({ waiting: "hidden" });
@@ -105,8 +104,6 @@ class App extends Component {
         const token = response.headers["x-auth-token"];
         localStorage.setItem(tokenKey, token);
         const myUser = this.getCurrentUser();
-        // store.dispatch(userLoggedIn(myUser));
-        // hist.replace("/welcome");
         this.setCurrentUser(myUser);
         toast.success(`Registry success: User: ${myUser.userName}`);
         this.setState({ waiting: "hidden" });
@@ -122,8 +119,38 @@ class App extends Component {
     }
   };
 
-  handleUpdate = (user) => {
-    this.setCurrentUser(user);
+  handleUpdate = async (user) => {
+    try {
+      console.log("----UPDATE CALLED----");
+      const updateUser = { ...user };
+      delete updateUser._id;
+
+      this.setState({ waiting: "visible" });
+      const response = await axios.put(
+        `${apiUrl}/update/${user._id}`,
+        updateUser
+      );
+
+      this.unsubscribe = store.subscribe(() => {
+        const currentUserInStore = store.getState()[0].currentUser;
+        if (this.state.user !== currentUserInStore)
+          this.setState({ user: currentUserInStore });
+      });
+      const token = response.data;
+      localStorage.setItem(tokenKey, token);
+      const myUser = this.getCurrentUser();
+      this.setCurrentUser(myUser);
+      toast.success(`User update success: User: ${myUser.userName}`);
+      this.setState({ waiting: "hidden" });
+    } catch (exception) {
+      if (exception.response && exception.response.status === 400) {
+        toast.error("There was an issue updating the user");
+      } else {
+        toast.error("An unexpected error ocurred");
+      }
+      this.setState({ waiting: "hidden" });
+      return;
+    }
   };
 
   render() {
@@ -141,45 +168,47 @@ class App extends Component {
           pauseOnHover
         />
         <UserContext.Provider value={store.getState()[0].currentUser}>
-          <Router history={hist}>
-            <Switch>
-              <Route
-                path="/welcome"
-                render={(props) => <Welcome {...props} />}
-              />
-              <Route
-                path="/login"
-                render={(props) => (
-                  <Login
-                    onLogin={(user) => this.handleLogin(user)}
-                    waitingToLog={this.state.waiting}
-                    {...props}
-                  />
-                )}
-              />
-              <Route
-                path="/register"
-                render={(props) => (
-                  <Register
-                    onRegister={(user) => this.handleRegister(user)}
-                    waitingToRegister={this.state.waiting}
-                    {...props}
-                  />
-                )}
-              />
-              <ProtectedRoute
-                path="/admin"
-                component={Admin}
-                user={user}
-                onLogout={() => this.handleLogout()}
-                onUpdate={(user) => this.handleUpdate(user)}
-              />
-              <ProtectedRoute path="/rtl" component={RTL} user={user} />
-              <Redirect from="/" exact to="/welcome" />
-              <Route path="/not-found" component={NotFound} />
-              <Redirect to="/not-found" />
-            </Switch>
-          </Router>
+          <WaitingContext.Provider value={this.state.waiting}>
+            <Router history={hist}>
+              <Switch>
+                <Route
+                  path="/welcome"
+                  render={(props) => <Welcome {...props} />}
+                />
+                <Route
+                  path="/login"
+                  render={(props) => (
+                    <Login
+                      onLogin={(user) => this.handleLogin(user)}
+                      waitingToLog={this.state.waiting}
+                      {...props}
+                    />
+                  )}
+                />
+                <Route
+                  path="/register"
+                  render={(props) => (
+                    <Register
+                      onRegister={(user) => this.handleRegister(user)}
+                      waitingToRegister={this.state.waiting}
+                      {...props}
+                    />
+                  )}
+                />
+                <ProtectedRoute
+                  path="/admin"
+                  component={Admin}
+                  user={user}
+                  onLogout={() => this.handleLogout()}
+                  onUpdate={(user) => this.handleUpdate(user)}
+                />
+                <ProtectedRoute path="/rtl" component={RTL} user={user} />
+                <Redirect from="/" exact to="/welcome" />
+                <Route path="/not-found" component={NotFound} />
+                <Redirect to="/not-found" />
+              </Switch>
+            </Router>
+          </WaitingContext.Provider>
         </UserContext.Provider>
       </React.Fragment>
     );

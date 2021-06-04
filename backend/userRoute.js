@@ -7,6 +7,7 @@ const _ = require("lodash");
 const app = express();
 const User = require("./userModel");
 
+// Login existing user
 app.post("/api/login", async (req, res) => {
   const { userName, password } = req.body;
 
@@ -19,14 +20,15 @@ app.post("/api/login", async (req, res) => {
 
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) return res.status(400).send("Invalid email or password.");
-  const { firstName, lastName, email, city, country, postalCode } = user;
+  const { _id, firstName, lastName, email, city, country, postalCode } = user;
   const token = jwt.sign(
-    { userName, firstName, lastName, email, city, country, postalCode },
+    { _id, userName, firstName, lastName, email, city, country, postalCode },
     config.get("jwtPrivateKey")
   );
   res.send(token);
 });
 
+// Register new user
 app.post("/api/register", async (req, res) => {
   const body = req.body;
 
@@ -43,6 +45,7 @@ app.post("/api/register", async (req, res) => {
   const result = await newUser.save();
 
   const {
+    _id,
     userName,
     firstName,
     lastName,
@@ -53,7 +56,7 @@ app.post("/api/register", async (req, res) => {
   } = result;
 
   const token = jwt.sign(
-    { userName, firstName, lastName, email, city, country, postalCode },
+    { _id, userName, firstName, lastName, email, city, country, postalCode },
     config.get("jwtPrivateKey")
   );
 
@@ -62,6 +65,7 @@ app.post("/api/register", async (req, res) => {
     .header("access-control-expose-headers", "x-auth-token")
     .send(
       _.pick(result, [
+        "_id",
         "userName",
         "firstName",
         "lastName",
@@ -73,11 +77,36 @@ app.post("/api/register", async (req, res) => {
     );
 });
 
+// Log out user
 app.post("/api/logout", (req, res) => {
   res
     .header("x-auth-token", "")
     .header("access-control-expose-headers", "x-auth-token")
     .send("logged out...");
+});
+
+// Update user
+app.put("/api/update/:id", async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  if (!user)
+    return res.status(400).send("There was an issue updating the user.");
+  const {
+    _id,
+    userName,
+    firstName,
+    lastName,
+    email,
+    city,
+    country,
+    postalCode,
+  } = user;
+  const token = jwt.sign(
+    { _id, userName, firstName, lastName, email, city, country, postalCode },
+    config.get("jwtPrivateKey")
+  );
+  res.send(token);
 });
 
 module.exports = app;
