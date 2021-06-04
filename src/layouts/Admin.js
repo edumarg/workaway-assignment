@@ -41,7 +41,7 @@ const switchRoutes = (
 const useStyles = makeStyles(styles);
 
 export default function Admin(props) {
-  const { onLogout, ...rest } = props;
+  const { onLogout, onUpdate, ...rest } = props;
   // styles
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
@@ -103,6 +103,7 @@ export default function Admin(props) {
         handleDrawerToggle={handleDrawerToggle}
         open={mobileOpen}
         color={color}
+        onUpdate={(user) => onUpdate(user)}
         {...rest}
       />
       <div className={classes.mainPanel} ref={mainPanel}>

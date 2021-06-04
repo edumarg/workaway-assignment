@@ -34,19 +34,22 @@ export default function Sidebar(props) {
         if (prop.path === "/upgrade-to-pro") {
           activePro = classes.activePro + " ";
           listItemClasses = classNames({
-            [" " + classes[color]]: true
+            [" " + classes[color]]: true,
           });
         } else {
           listItemClasses = classNames({
-            [" " + classes[color]]: activeRoute(prop.layout + prop.path)
+            [" " + classes[color]]: activeRoute(prop.layout + prop.path),
           });
         }
         const whiteFontClasses = classNames({
-          [" " + classes.whiteFont]: activeRoute(prop.layout + prop.path)
+          [" " + classes.whiteFont]: activeRoute(prop.layout + prop.path),
         });
         return (
           <NavLink
-            to={prop.layout + prop.path}
+            to={{
+              pathname: prop.layout + prop.path,
+              onUpdate: (user) => props.onUpdate(user),
+            }}
             className={activePro + classes.item}
             activeClassName="active"
             key={key}
@@ -55,7 +58,7 @@ export default function Sidebar(props) {
               {typeof prop.icon === "string" ? (
                 <Icon
                   className={classNames(classes.itemIcon, whiteFontClasses, {
-                    [classes.itemIconRTL]: props.rtlActive
+                    [classes.itemIconRTL]: props.rtlActive,
                   })}
                 >
                   {prop.icon}
@@ -63,14 +66,14 @@ export default function Sidebar(props) {
               ) : (
                 <prop.icon
                   className={classNames(classes.itemIcon, whiteFontClasses, {
-                    [classes.itemIconRTL]: props.rtlActive
+                    [classes.itemIconRTL]: props.rtlActive,
                   })}
                 />
               )}
               <ListItemText
                 primary={props.rtlActive ? prop.rtlName : prop.name}
                 className={classNames(classes.itemText, whiteFontClasses, {
-                  [classes.itemTextRTL]: props.rtlActive
+                  [classes.itemTextRTL]: props.rtlActive,
                 })}
                 disableTypography={true}
               />
@@ -85,7 +88,7 @@ export default function Sidebar(props) {
       <a
         href="https://www.creative-tim.com?ref=mdr-sidebar"
         className={classNames(classes.logoLink, {
-          [classes.logoLinkRTL]: props.rtlActive
+          [classes.logoLinkRTL]: props.rtlActive,
         })}
         target="_blank"
       >
@@ -105,12 +108,12 @@ export default function Sidebar(props) {
           open={props.open}
           classes={{
             paper: classNames(classes.drawerPaper, {
-              [classes.drawerPaperRTL]: props.rtlActive
-            })
+              [classes.drawerPaperRTL]: props.rtlActive,
+            }),
           }}
           onClose={props.handleDrawerToggle}
           ModalProps={{
-            keepMounted: true // Better open performance on mobile.
+            keepMounted: true, // Better open performance on mobile.
           }}
         >
           {brand}
@@ -133,8 +136,8 @@ export default function Sidebar(props) {
           open
           classes={{
             paper: classNames(classes.drawerPaper, {
-              [classes.drawerPaperRTL]: props.rtlActive
-            })
+              [classes.drawerPaperRTL]: props.rtlActive,
+            }),
           }}
         >
           {brand}
@@ -159,5 +162,5 @@ Sidebar.propTypes = {
   image: PropTypes.string,
   logoText: PropTypes.string,
   routes: PropTypes.arrayOf(PropTypes.object),
-  open: PropTypes.bool
+  open: PropTypes.bool,
 };

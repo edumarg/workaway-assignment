@@ -3,7 +3,15 @@ import React from "react";
 import { Redirect, Route } from "react-router-dom";
 
 const ProtectedRoute = (props) => {
-  const { path, component: Component, render, user, onLogout, ...rest } = props;
+  const {
+    path,
+    component: Component,
+    render,
+    user,
+    onLogout,
+    onUpdate,
+    ...rest
+  } = props;
   return (
     <Route
       path={path}
@@ -19,7 +27,11 @@ const ProtectedRoute = (props) => {
             />
           );
         return Component ? (
-          <Component onLogout={() => onLogout()} {...props} />
+          <Component
+            onLogout={() => onLogout()}
+            onUpdate={(user) => onUpdate(user)}
+            {...props}
+          />
         ) : (
           render(props)
         );

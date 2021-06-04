@@ -82,6 +82,16 @@ class App extends Component {
       }
   };
 
+  handleLogout = () => {
+    console.log("handle logout");
+    localStorage.removeItem(tokenKey);
+    this.setState({ user: "" });
+    store.dispatch(userLoggedOut());
+    this.unsubscribe();
+    toast.info("User logged out.\nGood bye...");
+    hist.replace("/welcome");
+  };
+
   handleRegister = async (user) => {
     if (user) {
       try {
@@ -112,14 +122,8 @@ class App extends Component {
     }
   };
 
-  handleLogout = () => {
-    console.log("handle logout");
-    localStorage.removeItem(tokenKey);
-    this.setState({ user: "" });
-    store.dispatch(userLoggedOut());
-    this.unsubscribe();
-    toast.info("User logged out.\nGood bye...");
-    hist.replace("/welcome");
+  handleUpdate = (user) => {
+    this.setCurrentUser(user);
   };
 
   render() {
@@ -168,6 +172,7 @@ class App extends Component {
                 component={Admin}
                 user={user}
                 onLogout={() => this.handleLogout()}
+                onUpdate={(user) => this.handleUpdate(user)}
               />
               <ProtectedRoute path="/rtl" component={RTL} user={user} />
               <Redirect from="/" exact to="/welcome" />

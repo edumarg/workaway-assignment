@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -16,6 +16,7 @@ import CardFooter from "components/Card/CardFooter.js";
 import avatar from "assets/img/faces/marc.jpg";
 
 import UserContext from "./../../contexts/userContext";
+import { propTypes } from "react-bootstrap/esm/Image";
 
 const styles = {
   cardCategoryWhite: {
@@ -38,10 +39,24 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function UserProfile() {
+export default function UserProfile(props) {
   const classes = useStyles();
 
-  const currentUser = useContext(UserContext);
+  const context = useContext(UserContext);
+  const [currentUser, setCurrentUserState] = useState(context);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log("event name", name);
+    setCurrentUserState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdate = () => {
+    props.location.onUpdate(currentUser);
+  };
 
   return (
     <div>
@@ -70,20 +85,30 @@ export default function UserProfile() {
                   <CustomInput
                     labelText="Username"
                     id="username"
+                    name="userName"
                     formControlProps={{
                       fullWidth: true,
                     }}
-                    inputProps={{ value: currentUser.userName }}
+                    inputProps={{
+                      value: currentUser.userName,
+                      name: "userName",
+                      onChange: (e) => handleChange(e),
+                    }}
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
                     labelText="Email address"
                     id="email-address"
+                    name="email"
                     formControlProps={{
                       fullWidth: true,
                     }}
-                    inputProps={{ value: currentUser.email }}
+                    inputProps={{
+                      value: currentUser.email,
+                      name: "email",
+                      onChange: (e) => handleChange(e),
+                    }}
                   />
                 </GridItem>
               </GridContainer>
@@ -92,20 +117,30 @@ export default function UserProfile() {
                   <CustomInput
                     labelText="First Name"
                     id="first-name"
+                    name="firstName"
                     formControlProps={{
                       fullWidth: true,
                     }}
-                    inputProps={{ value: currentUser.firstName }}
+                    inputProps={{
+                      value: currentUser.firstName,
+                      name: "firstName",
+                      onChange: (e) => handleChange(e),
+                    }}
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
                   <CustomInput
                     labelText="Last Name"
                     id="last-name"
+                    name="lastName"
                     formControlProps={{
                       fullWidth: true,
                     }}
-                    inputProps={{ value: currentUser.lastName }}
+                    inputProps={{
+                      value: currentUser.lastName,
+                      name: "lastName",
+                      onChange: (e) => handleChange(e),
+                    }}
                   />
                 </GridItem>
               </GridContainer>
@@ -114,30 +149,45 @@ export default function UserProfile() {
                   <CustomInput
                     labelText="City"
                     id="city"
+                    name="city"
                     formControlProps={{
                       fullWidth: true,
                     }}
-                    inputProps={{ value: currentUser.city }}
+                    inputProps={{
+                      value: currentUser.city,
+                      name: "city",
+                      onChange: (e) => handleChange(e),
+                    }}
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
                     labelText="Country"
                     id="country"
+                    name="country"
                     formControlProps={{
                       fullWidth: true,
                     }}
-                    inputProps={{ value: currentUser.country }}
+                    inputProps={{
+                      value: currentUser.country,
+                      name: "country",
+                      onChange: (e) => handleChange(e),
+                    }}
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
                     labelText="Postal Code"
                     id="postal-code"
+                    name="postalCode"
                     formControlProps={{
                       fullWidth: true,
                     }}
-                    inputProps={{ value: currentUser.postalCode }}
+                    inputProps={{
+                      value: currentUser.postalCode,
+                      name: "postalCode",
+                      onChange: (e) => handleChange(e),
+                    }}
                   />
                 </GridItem>
               </GridContainer>
@@ -159,7 +209,9 @@ export default function UserProfile() {
               </GridContainer>
             </CardBody>
             <CardFooter>
-              <Button color="primary">Update Profile</Button>
+              <Button color="primary" onClick={handleUpdate}>
+                Update Profile
+              </Button>
             </CardFooter>
           </Card>
         </GridItem>
