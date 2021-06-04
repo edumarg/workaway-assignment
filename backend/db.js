@@ -5,6 +5,7 @@ const config = require("config");
 
 module.exports = function() {
   const db = config.get("db");
+  mongoose.set("useFindAndModify", false);
   mongoose
     .connect(db, {
       useNewUrlParser: true,
