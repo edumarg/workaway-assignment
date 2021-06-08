@@ -8,11 +8,15 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 import Spinner from "react-bootstrap/Spinner";
 
+import WaitingContext from "./../../contexts/waitingContext";
+import RegisterContext from "./../../contexts/registerContext";
+
 class Register extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { user: {} };
-  }
+  state = { user: {} };
+
+  static contextType = RegisterContext;
+
+  componentDidMount() {}
 
   handleOnChange = (event) => {
     const myUser = { ...this.state.user };
@@ -95,8 +99,8 @@ class Register extends Component {
       toast.error("Please enter a postal code");
       return;
     }
-
-    this.props.onRegister(userToRegister);
+    const onRegister = this.context;
+    onRegister(userToRegister);
   };
 
   render() {
@@ -108,136 +112,140 @@ class Register extends Component {
 
     return (
       <React.Fragment>
-        <div style={myStyle}>
-          <h2>Register</h2>
-          <GridContainer>
-            <GridItem xs={12} sm={12} md={4}>
-              <CustomInput
-                labelText="Username"
-                id="username"
-                inputProps={{
-                  name: "userName",
-                  onChange: (event) => this.handleOnChange(event),
-                }}
-                formControlProps={{
-                  fullWidth: true,
-                }}
-              />
-            </GridItem>
-            <GridItem xs={12} sm={12} md={4}>
-              <CustomInput
-                labelText="Password"
-                id="password"
-                inputProps={{
-                  name: "password",
-                  type: "password",
-                  onChange: (event) => this.handleOnChange(event),
-                }}
-                formControlProps={{
-                  fullWidth: true,
-                }}
-              />
-            </GridItem>
-            <GridItem xs={12} sm={12} md={4}>
-              <CustomInput
-                labelText="Email address"
-                id="email-address"
-                inputProps={{
-                  name: "email",
-                  onChange: (event) => this.handleOnChange(event),
-                }}
-                formControlProps={{
-                  fullWidth: true,
-                }}
-              />
-            </GridItem>
-          </GridContainer>
-          <GridContainer>
-            <GridItem xs={12} sm={12} md={6}>
-              <CustomInput
-                labelText="First Name"
-                id="first-name"
-                inputProps={{
-                  name: "firstName",
-                  onChange: (event) => this.handleOnChange(event),
-                }}
-                formControlProps={{
-                  fullWidth: true,
-                }}
-              />
-            </GridItem>
-            <GridItem xs={12} sm={12} md={6}>
-              <CustomInput
-                labelText="Last Name"
-                id="last-name"
-                inputProps={{
-                  name: "lastName",
-                  onChange: (event) => this.handleOnChange(event),
-                }}
-                formControlProps={{
-                  fullWidth: true,
-                }}
-              />
-            </GridItem>
-          </GridContainer>
-          <GridContainer>
-            <GridItem xs={12} sm={12} md={4}>
-              <CustomInput
-                labelText="City"
-                id="city"
-                inputProps={{
-                  name: "city",
-                  onChange: (event) => this.handleOnChange(event),
-                }}
-                formControlProps={{
-                  fullWidth: true,
-                }}
-              />
-            </GridItem>
-            <GridItem xs={12} sm={12} md={4}>
-              <CustomInput
-                labelText="Country"
-                id="country"
-                inputProps={{
-                  name: "country",
-                  onChange: (event) => this.handleOnChange(event),
-                }}
-                formControlProps={{
-                  fullWidth: true,
-                }}
-              />
-            </GridItem>
-            <GridItem xs={12} sm={12} md={4}>
-              <CustomInput
-                labelText="Postal Code"
-                id="postal-code"
-                inputProps={{
-                  name: "postalCode",
-                  onChange: (event) => this.handleOnChange(event),
-                }}
-                formControlProps={{
-                  fullWidth: true,
-                }}
-              />
-            </GridItem>
-          </GridContainer>
-          <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
-              <Button color="primary" onClick={() => this.handleRegister()}>
-                Register User
-              </Button>
-            </GridItem>
-          </GridContainer>
-          <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
-              <Spinner
-                animation="border"
-                variant="danger"
-                style={{ visibility: this.props.waitingToRegister }}
-              />
-            </GridItem>
-          </GridContainer>
-        </div>
+        <WaitingContext.Consumer>
+          {(waitingContext) => (
+            <div style={myStyle}>
+              <h2>Register</h2>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={4}>
+                  <CustomInput
+                    labelText="Username"
+                    id="username"
+                    inputProps={{
+                      name: "userName",
+                      onChange: (event) => this.handleOnChange(event),
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={4}>
+                  <CustomInput
+                    labelText="Password"
+                    id="password"
+                    inputProps={{
+                      name: "password",
+                      type: "password",
+                      onChange: (event) => this.handleOnChange(event),
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={4}>
+                  <CustomInput
+                    labelText="Email address"
+                    id="email-address"
+                    inputProps={{
+                      name: "email",
+                      onChange: (event) => this.handleOnChange(event),
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                  />
+                </GridItem>
+              </GridContainer>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={6}>
+                  <CustomInput
+                    labelText="First Name"
+                    id="first-name"
+                    inputProps={{
+                      name: "firstName",
+                      onChange: (event) => this.handleOnChange(event),
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={6}>
+                  <CustomInput
+                    labelText="Last Name"
+                    id="last-name"
+                    inputProps={{
+                      name: "lastName",
+                      onChange: (event) => this.handleOnChange(event),
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                  />
+                </GridItem>
+              </GridContainer>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={4}>
+                  <CustomInput
+                    labelText="City"
+                    id="city"
+                    inputProps={{
+                      name: "city",
+                      onChange: (event) => this.handleOnChange(event),
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={4}>
+                  <CustomInput
+                    labelText="Country"
+                    id="country"
+                    inputProps={{
+                      name: "country",
+                      onChange: (event) => this.handleOnChange(event),
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={4}>
+                  <CustomInput
+                    labelText="Postal Code"
+                    id="postal-code"
+                    inputProps={{
+                      name: "postalCode",
+                      onChange: (event) => this.handleOnChange(event),
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                  />
+                </GridItem>
+              </GridContainer>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={12}>
+                  <Button color="primary" onClick={() => this.handleRegister()}>
+                    Register User
+                  </Button>
+                </GridItem>
+              </GridContainer>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={12}>
+                  <Spinner
+                    animation="border"
+                    variant="danger"
+                    style={{ visibility: waitingContext }}
+                  />
+                </GridItem>
+              </GridContainer>
+            </div>
+          )}
+        </WaitingContext.Consumer>
       </React.Fragment>
     );
   }

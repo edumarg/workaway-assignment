@@ -8,11 +8,11 @@ import Button from "components/CustomButtons/Button.js";
 import Spinner from "react-bootstrap/Spinner";
 import { toast } from "react-toastify";
 
+import WaitingContext from "./../../contexts/waitingContext";
+import LoginContext from "./../../contexts/loginContext";
 class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { user: { userName: "", password: "" } };
-  }
+  state = { user: { userName: "", password: "" } };
+  static contextType = LoginContext;
 
   handleLogin = () => {
     const userToLog = { ...this.state.user };
@@ -38,7 +38,8 @@ class Login extends Component {
       );
       return;
     } else if (userToLog.userName && userToLog.password) {
-      this.props.onLogin(userToLog);
+      const onLogin = this.context;
+      onLogin(userToLog);
     }
   };
 
@@ -57,54 +58,58 @@ class Login extends Component {
 
     return (
       <React.Fragment>
-        <div style={myStyle}>
-          <h2>Login</h2>
-          <GridContainer>
-            <GridItem xs={12} sm={12} md={6}>
-              <CustomInput
-                labelText="Username"
-                id="username"
-                inputProps={{
-                  name: "userName",
-                  onChange: (event) => this.handleOnChange(event),
-                }}
-                formControlProps={{
-                  fullWidth: true,
-                }}
-              />
-            </GridItem>
-            <GridItem xs={12} sm={12} md={6}>
-              <CustomInput
-                labelText="Password"
-                id="password"
-                inputProps={{
-                  name: "password",
-                  type: "password",
-                  onChange: (event) => this.handleOnChange(event),
-                }}
-                formControlProps={{
-                  fullWidth: true,
-                }}
-              />
-            </GridItem>
-          </GridContainer>
-          <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
-              <Button color="primary" onClick={() => this.handleLogin()}>
-                Login
-              </Button>
-            </GridItem>
-          </GridContainer>
-          <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
-              <Spinner
-                animation="border"
-                variant="danger"
-                style={{ visibility: this.props.waitingToLog }}
-              />
-            </GridItem>
-          </GridContainer>
-        </div>
+        <WaitingContext.Consumer>
+          {(waitingContext) => (
+            <div style={myStyle}>
+              <h2>Login</h2>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={6}>
+                  <CustomInput
+                    labelText="Username"
+                    id="username"
+                    inputProps={{
+                      name: "userName",
+                      onChange: (event) => this.handleOnChange(event),
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={6}>
+                  <CustomInput
+                    labelText="Password"
+                    id="password"
+                    inputProps={{
+                      name: "password",
+                      type: "password",
+                      onChange: (event) => this.handleOnChange(event),
+                    }}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                  />
+                </GridItem>
+              </GridContainer>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={12}>
+                  <Button color="primary" onClick={() => this.handleLogin()}>
+                    Login
+                  </Button>
+                </GridItem>
+              </GridContainer>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={12}>
+                  <Spinner
+                    animation="border"
+                    variant="danger"
+                    style={{ visibility: waitingContext }}
+                  />
+                </GridItem>
+              </GridContainer>
+            </div>
+          )}
+        </WaitingContext.Consumer>
       </React.Fragment>
     );
   }

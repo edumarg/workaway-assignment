@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
@@ -46,10 +45,7 @@ export default function Sidebar(props) {
         });
         return (
           <NavLink
-            to={{
-              pathname: prop.layout + prop.path,
-              onUpdate: (user) => props.onUpdate(user),
-            }}
+            to={prop.layout + prop.path}
             className={activePro + classes.item}
             activeClassName="active"
             key={key}

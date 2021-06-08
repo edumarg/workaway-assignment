@@ -41,7 +41,7 @@ const switchRoutes = (
 const useStyles = makeStyles(styles);
 
 export default function Admin(props) {
-  const { onLogout, onUpdate, ...rest } = props;
+  const { ...rest } = props;
   // styles
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
@@ -103,14 +103,12 @@ export default function Admin(props) {
         handleDrawerToggle={handleDrawerToggle}
         open={mobileOpen}
         color={color}
-        onUpdate={(user) => onUpdate(user)}
         {...rest}
       />
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
           routes={routes}
           handleDrawerToggle={handleDrawerToggle}
-          onLogout={() => onLogout()}
           {...rest}
         />
         {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}

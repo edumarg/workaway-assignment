@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -21,12 +21,16 @@ import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 
+import LogoutContext from "./../../contexts/logoutContext";
+
 const useStyles = makeStyles(styles);
 
-export default function AdminNavbarLinks(props) {
+export default function AdminNavbarLinks() {
   const classes = useStyles();
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
+  const onLogout = useContext(LogoutContext);
+
   const handleClickNotification = (event) => {
     if (openNotification && openNotification.contains(event.target)) {
       setOpenNotification(null);
@@ -207,7 +211,7 @@ export default function AdminNavbarLinks(props) {
                     </MenuItem>
                     <Divider light />
                     <MenuItem
-                      onClick={() => props.onLogout()}
+                      onClick={() => onLogout()}
                       className={classes.dropdownItem}
                     >
                       Logout

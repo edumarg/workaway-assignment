@@ -18,6 +18,10 @@ import configureStore from "./store/configureStore";
 import { userLoggedIn, userLoggedOut } from "./store/auth";
 import UserContext from "./contexts/userContext";
 import WaitingContext from "./contexts/waitingContext";
+import LoginContext from "./contexts/loginContext";
+import LogoutContext from "./contexts/logoutContext";
+import RegisterContext from "./contexts/registerContext";
+import UpdateContext from "./contexts/updateContext";
 
 const hist = createBrowserHistory();
 const store = configureStore();
@@ -169,45 +173,47 @@ class App extends Component {
         />
         <UserContext.Provider value={store.getState()[0].currentUser}>
           <WaitingContext.Provider value={this.state.waiting}>
-            <Router history={hist}>
-              <Switch>
-                <Route
-                  path="/welcome"
-                  render={(props) => <Welcome {...props} />}
-                />
-                <Route
-                  path="/login"
-                  render={(props) => (
-                    <Login
-                      onLogin={(user) => this.handleLogin(user)}
-                      waitingToLog={this.state.waiting}
-                      {...props}
-                    />
-                  )}
-                />
-                <Route
-                  path="/register"
-                  render={(props) => (
-                    <Register
-                      onRegister={(user) => this.handleRegister(user)}
-                      waitingToRegister={this.state.waiting}
-                      {...props}
-                    />
-                  )}
-                />
-                <ProtectedRoute
-                  path="/admin"
-                  component={Admin}
-                  user={user}
-                  onLogout={() => this.handleLogout()}
-                  onUpdate={(user) => this.handleUpdate(user)}
-                />
-                <ProtectedRoute path="/rtl" component={RTL} user={user} />
-                <Redirect from="/" exact to="/welcome" />
-                <Route path="/not-found" component={NotFound} />
-                <Redirect to="/not-found" />
-              </Switch>
-            </Router>
+            <LoginContext.Provider value={(user) => this.handleLogin(user)}>
+              <RegisterContext.Provider
+                value={(user) => this.handleRegister(user)}
+              >
+                <UpdateContext.Provider
+                  value={(user) => this.handleUpdate(user)}
+                >
+                  <LogoutContext.Provider value={() => this.handleLogout()}>
+                    <Router history={hist}>
+                      <Switch>
+                        <Route
+                          path="/welcome"
+                          render={(props) => <Welcome {...props} />}
+                        />
+                        <Route
+                          path="/login"
+                          render={(props) => <Login {...props} />}
+                        />
+                        <Route
+                          path="/register"
+                          render={(props) => <Register {...props} />}
+                        />
+                        <ProtectedRoute
+                          path="/admin"
+                          component={Admin}
+                          user={user}
+                        />
+                        <ProtectedRoute
+                          path="/rtl"
+                          component={RTL}
+                          user={user}
+                        />
+                        <Redirect from="/" exact to="/welcome" />
+                        <Route path="/not-found" component={NotFound} />
+                        <Redirect to="/not-found" />
+                      </Switch>
+                    </Router>
+                  </LogoutContext.Provider>
+                </UpdateContext.Provider>
+              </RegisterContext.Provider>
+            </LoginContext.Provider>
           </WaitingContext.Provider>
         </UserContext.Provider>
       </React.Fragment>

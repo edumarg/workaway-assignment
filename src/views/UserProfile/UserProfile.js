@@ -19,6 +19,7 @@ import avatar from "assets/img/faces/marc.jpg";
 
 import UserContext from "./../../contexts/userContext";
 import WaitingContext from "./../../contexts/waitingContext";
+import UpdateContext from "./../../contexts/updateContext";
 
 const styles = {
   cardCategoryWhite: {
@@ -41,7 +42,7 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function UserProfile(props) {
+export default function UserProfile() {
   const classes = useStyles();
 
   const userContext = useContext(UserContext);
@@ -49,6 +50,7 @@ export default function UserProfile(props) {
 
   const waitContext = useContext(WaitingContext);
   const [userUpdateWait, setUserUpdateWait] = useState(waitContext);
+  const onUpdate = useContext(UpdateContext);
 
   const handleUserUpdateState = () => {
     if (userUpdateWait !== waitContext) setUserUpdateWait(waitContext);
@@ -128,7 +130,7 @@ export default function UserProfile(props) {
       return;
     }
 
-    props.location.onUpdate(userToUpdate);
+    onUpdate(userToUpdate);
   };
 
   return (
